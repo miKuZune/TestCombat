@@ -20,7 +20,6 @@ public class PlayerDealDamage : MonoBehaviour {
 			coll.gameObject.GetComponent<Health> ().TakeDamage(damage);
 			player.GetComponent<CharController> ().AddToComboBar (5);
 			player.GetComponent<PlayerUIManager> ().SetComboUI (player.GetComponent<CharController> ().GetComboBar (), player.GetComponent<CharController> ().maxCombo);
-			Debug.Log (player.GetComponent<CharController> ().GetComboBar ());
 		}
 	}
 }

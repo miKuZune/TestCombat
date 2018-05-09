@@ -13,11 +13,15 @@ public class CharController : MonoBehaviour {
 	public int maxHealth;
 	public int maxCombo;
 
-	public float dodgeSpeed;
-	public float dodgeTime;
-	float timeTillNotDodging;
+	public float dodgeMoveSpeed;
 
-	Vector3 currDodgeDir;
+	Vector3 dodgeDir;
+	bool isDodging = false;
+	float timeSpentDodging;
+
+	float playerSpecifiedDodgeTime;
+
+	string currChosenEnemy = null;
 
 	//Private globals
 	Camera cam;
@@ -62,6 +66,32 @@ public class CharController : MonoBehaviour {
 		transform.rotation = rot;
 	}
 
+
+	void LookAtGameObject(string objName)
+	{
+		GameObject enemy = GameObject.Find (objName);
+		cam.transform.LookAt (enemy.transform);
+		transform.LookAt (enemy.transform);
+		Debug.Log (enemy);
+	}
+
+	string ChooseNewEnemy()
+	{
+		GameObject[] enemies = GameObject.FindGameObjectsWithTag ("Enemy");
+
+		string enemyToLookAt = null;
+
+		float leastDistance = 0;
+		for (int i = 0; i < enemies.Length; i++) {
+			float dist = Vector3.Distance (enemies [i].transform.position, transform.position);
+			if (dist < leastDistance || leastDistance == 0) {
+				leastDistance = dist;
+				enemyToLookAt = enemies [i].name;
+			}
+		}
+		return enemyToLookAt;
+	}
+
 	void Move(Vector3 direction, float speed)
 	{
 		transform.Translate (direction * speed * Time.deltaTime);
@@ -104,19 +134,14 @@ public class CharController : MonoBehaviour {
 	}
 
 
-	void StartDodge(Vector3 currentDir)
+	void Dodge(Vector3 inputDir)
 	{
-		timeTillNotDodging = dodgeTime;
-
-
-		if (currentDir == Vector3.zero) {
-			currDodgeDir = -Vector3.forward;
-		} else {
-			currDodgeDir = currentDir;
-		}
-
-
+		timeSpentDodging = 0;
+		if (inputDir != Vector3.zero) {
+			dodgeDir = inputDir;
+		} else {dodgeDir = Vector3.forward * -1;}
 	}
+
 
 	Vector3 RotationInputManager( )
 	{
@@ -139,9 +164,43 @@ public class CharController : MonoBehaviour {
 		dir.z = Input.GetAxis ("Vertical");
 
 		if (Input.GetButtonDown ("Jump")) {Jump (jumpPower);}
-		if (Input.GetButtonDown ("Dodge")) {StartDodge (dir);}
+		if (Input.GetButton ("Dodge") && timeSpentDodging <= 0) {isDodging = true; Dodge (dir); playerSpecifiedDodgeTime += Time.deltaTime;}
+		else if (!Input.GetButtonDown ("Dodge")) {isDodging = false;}
+
+		if (Input.GetButtonDown ("Lock")) {
+			if (currChosenEnemy == null) {
+				currChosenEnemy = ChooseNewEnemy ();
+				cam.GetComponent<CameraFollowScript> ().enabled = false;
+			} else {
+				currChosenEnemy = null;
+				cam.GetComponent<CameraFollowScript> ().enabled = true;
+			}
+		}
 
 		return dir;
+	}
+
+	string CycleThroughEnemies()
+	{
+		GameObject[] enemies = GameObject.FindGameObjectsWithTag ("Enemy");
+		GameObject currEnemy = GameObject.Find (currChosenEnemy);
+		string newEnemyName = null;
+
+
+		float closesestDist = 0;
+		for (int i = 0; i < enemies.Length; i++) {
+			if (enemies [i] != currEnemy) {
+				float dist = Vector3.Distance (enemies [i].transform.position, currEnemy.transform.position );
+				Debug.Log ("Looking for new enemy");
+				if (dist < closesestDist || closesestDist == 0) {
+					closesestDist = dist;
+					newEnemyName = enemies [i].name;
+					Debug.Log ("Found new enemy");
+				}
+			}
+		}
+
+		return newEnemyName;
 	}
 
 	void AttackInputManager()
@@ -159,6 +218,13 @@ public class CharController : MonoBehaviour {
 		if (Input.GetButtonDown ("Fire2") && timeSinceLastAnimation >= 1) {
 			
 			anim.Play ("HeavyAttack1");
+		}
+
+		if (Input.GetButtonDown ("Fire3") && comboBar > 50) 
+		{
+			anim.Play ("SpecialAttackStab");
+			comboBar -= 50;
+			this.GetComponent<PlayerUIManager> ().SetComboUI (comboBar, maxCombo);
 		}
 
 		timeSinceLastAnimation += Time.deltaTime;
@@ -182,9 +248,8 @@ public class CharController : MonoBehaviour {
 	// Update is called once per frame
 	void Update () 
 	{
-
-		if (timeTillNotDodging <= 0) 
-		{
+		//Normal movement
+		if (!isDodging) {
 			Vector3 direction = MovementInputManager ();
 			Vector3 rot = RotationInputManager ();
 			anim.SetFloat ("movement", direction.magnitude);
@@ -193,14 +258,27 @@ public class CharController : MonoBehaviour {
 				Move (direction, moveSpeed);
 			}
 
-			Turn (rot);
 			AttackInputManager ();
+			timeSpentDodging -= Time.deltaTime * 0.5f;
 		} else 
 		{
-			Move (currDodgeDir, dodgeSpeed);
+			timeSpentDodging += Time.deltaTime;
 
-			timeTillNotDodging -= Time.deltaTime;
+			Move (dodgeDir, dodgeMoveSpeed);
+
+			if (timeSpentDodging >= 0.5f) {
+				isDodging = false;
+			} else if (timeSpentDodging > playerSpecifiedDodgeTime) {isDodging = false; playerSpecifiedDodgeTime = 0;}
 		}
+
+
+		if (currChosenEnemy == null) {
+			Turn (RotationInputManager());
+		} else {
+			LookAtGameObject (currChosenEnemy);
+			if (Input.GetButtonDown ("ToggleEnemy")) {currChosenEnemy = CycleThroughEnemies (); Debug.Log ("Togglin");}
+		}
+
 
 
 	}
