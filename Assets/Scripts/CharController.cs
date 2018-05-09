@@ -14,8 +14,9 @@ public class CharController : MonoBehaviour {
 	public int maxCombo;
 
 	public float dodgeMoveSpeed;
-
+	public float maxDodgeTime;
 	Vector3 dodgeDir;
+	bool canDodge = true;
 	bool isDodging = false;
 	float timeSpentDodging;
 
@@ -136,10 +137,17 @@ public class CharController : MonoBehaviour {
 
 	void Dodge(Vector3 inputDir)
 	{
-		timeSpentDodging = 0;
-		if (inputDir != Vector3.zero) {
-			dodgeDir = inputDir;
-		} else {dodgeDir = Vector3.forward * -1;}
+		if (inputDir == Vector3.zero) {
+			inputDir = -Vector3.forward;
+		}
+
+
+		if (canDodge) {
+			Move (inputDir, dodgeMoveSpeed);
+			timeSpentDodging += Time.deltaTime;
+			Debug.Log (timeSpentDodging);
+			if (timeSpentDodging > maxDodgeTime) {canDodge = false;}
+		}
 	}
 
 
@@ -164,8 +172,7 @@ public class CharController : MonoBehaviour {
 		dir.z = Input.GetAxis ("Vertical");
 
 		if (Input.GetButtonDown ("Jump")) {Jump (jumpPower);}
-		if (Input.GetButton ("Dodge") && timeSpentDodging <= 0) {isDodging = true; Dodge (dir); playerSpecifiedDodgeTime += Time.deltaTime;}
-		else if (!Input.GetButtonDown ("Dodge")) {isDodging = false;}
+		if (Input.GetButton ("Dodge")) {Dodge (dir);}
 
 		if (Input.GetButtonDown ("Lock")) {
 			if (currChosenEnemy == null) {
@@ -238,6 +245,9 @@ public class CharController : MonoBehaviour {
 	public void AddToComboBar(int addition)
 	{
 		comboBar += addition;
+		if (comboBar > maxCombo) {
+			comboBar = maxCombo;
+		}
 	}
 
 	public float GetComboBar()
@@ -259,18 +269,17 @@ public class CharController : MonoBehaviour {
 			}
 
 			AttackInputManager ();
-			timeSpentDodging -= Time.deltaTime * 0.5f;
 		} else 
 		{
-			timeSpentDodging += Time.deltaTime;
-
-			Move (dodgeDir, dodgeMoveSpeed);
-
-			if (timeSpentDodging >= 0.5f) {
-				isDodging = false;
-			} else if (timeSpentDodging > playerSpecifiedDodgeTime) {isDodging = false; playerSpecifiedDodgeTime = 0;}
+			
 		}
 
+		if (canDodge == false) {
+			timeSpentDodging -= Time.deltaTime;
+			if (timeSpentDodging <= 0) {
+				canDodge = true;
+			}
+		}
 
 		if (currChosenEnemy == null) {
 			Turn (RotationInputManager());
@@ -279,7 +288,7 @@ public class CharController : MonoBehaviour {
 			if (Input.GetButtonDown ("ToggleEnemy")) {currChosenEnemy = CycleThroughEnemies (); Debug.Log ("Togglin");}
 		}
 
-
+		Debug.Log (timeSpentDodging);
 
 	}
 }
