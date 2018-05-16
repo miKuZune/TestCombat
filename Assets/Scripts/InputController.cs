@@ -15,6 +15,11 @@ public class InputController{
     bool lockPressed;
     bool lockChangePressed;
 
+    //Attack inputs
+    bool lightAttackPressed;
+    bool heavyAttackPressed;
+    bool specialAttackPressed;
+
     public bool GetJumped()
     {
         return jumped;
@@ -49,6 +54,21 @@ public class InputController{
     {
         return lockChangePressed;
     }
+
+    public bool GetLight()
+    {
+        return lightAttackPressed;
+    }
+
+    public bool GetHeavy()
+    {
+        return heavyAttackPressed;
+    }
+
+    public bool GetSpecial()
+    {
+        return specialAttackPressed;
+    }
 	
 	
     public void UpdateMovementInput()
@@ -64,5 +84,12 @@ public class InputController{
         upCam = Input.GetAxis("CamYAxis");
         lockPressed = Input.GetButtonDown("Lock");
         lockChangePressed = Input.GetButtonDown("LockTargetChange");
+    }
+
+    public void UpdateCombatInputs()
+    {
+        lightAttackPressed = Input.GetButtonDown("LightAttack");
+        heavyAttackPressed = Input.GetButtonDown("HeavyAttack");
+        specialAttackPressed = Input.GetButtonDown("SpecialAttack");
     }
 }

@@ -84,8 +84,6 @@ public class CameraController : MonoBehaviour {
 
         newPos.y += offset.y;
 
-        Debug.Log(newPos.magnitude);
-
         transform.position = newPos;
     }
 

@@ -17,11 +17,14 @@ public class PlayerManager : MonoBehaviour {
     Rigidbody playerRB;
     InputController IC ;
 
+    Animator anim;
+
 	// Use this for initialization
 	void Start ()
     {
         IC = new InputController();
         playerRB = GetComponent<Rigidbody>();
+        anim = GetComponent<Animator>();
 	}
 	
     //Move the player in an upward direction.
@@ -68,6 +71,10 @@ public class PlayerManager : MonoBehaviour {
                 Jump();
             }
         }
+
+        //Set animations
+        anim.SetFloat("forwardMove", IC.GetForwardMove());
+        anim.SetFloat("sidewaysMove", IC.GetRightMove());
 
         float currMoveSpeedLimiter = 0;
         //Check if the player is moving forward or backwards, limit their speed accordingly.
