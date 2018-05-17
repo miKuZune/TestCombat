@@ -309,9 +309,12 @@
     <Compile Include="Assets\Legacy\Scripts\PlayerDealDamage.cs" />
     <Compile Include="Assets\Legacy\Scripts\PlayerUIManager.cs" />
     <Compile Include="Assets\Legacy\Scripts\UnitStats.cs" />
+    <Compile Include="Assets\Scripts\Attack.cs" />
+    <Compile Include="Assets\Scripts\AttackManager.cs" />
     <Compile Include="Assets\Scripts\CameraController.cs" />
     <Compile Include="Assets\Scripts\InputController.cs" />
     <Compile Include="Assets\Scripts\PlayerManager.cs" />
+    <Compile Include="Assets\Scripts\Weapon.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="C:\Users\Max\AppData\Local\Unity\cache\packages\packages.unity.com\com.unity.package-manager-ui@1.8.8\Editor\Resources\Styles\Main_Dark.uss" />

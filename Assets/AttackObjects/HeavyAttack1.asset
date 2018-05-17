@@ -11,6 +11,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 19e086dd41ef2dc49915b931b82f6431, type: 3}
   m_Name: HeavyAttack1
   m_EditorClassIdentifier: 
-  attackType: 
-  animation: {fileID: 0}
-  damage: 0
+  attackType: Heavy
+  animation: {fileID: 7400000, guid: 8e8a4f227493b0441975fa1e1b0ed21e, type: 2}
+  damage: 40

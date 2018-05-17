@@ -3277,6 +3277,7 @@ GameObject:
   - component: {fileID: 1087714485}
   - component: {fileID: 1087714481}
   - component: {fileID: 1087714482}
+  - component: {fileID: 1087714486}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -3363,6 +3364,26 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 0.6, y: 1.8779092, z: 0.2}
   m_Center: {x: 0, y: -0.06104541, z: 0}
+--- !u!114 &1087714486
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1087714480}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a4cce784b01a15b4e83413f69a1e877f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  lightAttacks:
+  - {fileID: 11400000, guid: aea875394f2f6a94c941632bd118afd0, type: 2}
+  - {fileID: 11400000, guid: 1505ad91aebea8d4ba766e12c5a129da, type: 2}
+  heavyAttacks:
+  - {fileID: 11400000, guid: 6b94a37c8b4efec478f828c77b99f3c9, type: 2}
+  specialAttacks:
+  - {fileID: 11400000, guid: 7b6248484b6808a489f0e7d2ded5bcad, type: 2}
+  timeToResetAnimations: 2.5
+  maxAnimationsInCombo: 5
 --- !u!1 &1122750212
 GameObject:
   m_ObjectHideFlags: 0
@@ -4348,7 +4369,7 @@ MonoBehaviour:
   distanceFromPlayer: 3
   maxYOffset: 3
   minYOffset: 0.75
-  lockOnOffset: {x: 1.25, y: 0.75, z: 2.5}
+  lockOnOffset: {x: 0.75, y: 0.75, z: 1.75}
 --- !u!1 &1458878213
 GameObject:
   m_ObjectHideFlags: 0
@@ -6274,6 +6295,7 @@ GameObject:
   - component: {fileID: 2040738294}
   - component: {fileID: 2040738293}
   - component: {fileID: 2040738296}
+  - component: {fileID: 2040738295}
   m_Layer: 0
   m_Name: Spear
   m_TagString: Untagged
@@ -6339,6 +6361,17 @@ MeshFilter:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 2040738291}
   m_Mesh: {fileID: 4300000, guid: cd52f22f263bfa14c8116040b58b4f74, type: 3}
+--- !u!114 &2040738295
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 2040738291}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3e420528361bbdd48a1fb67ddbc3a926, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!64 &2040738296
 MeshCollider:
   m_ObjectHideFlags: 0

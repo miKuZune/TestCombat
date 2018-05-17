@@ -10,4 +10,9 @@ public class Attack : ScriptableObject
     public AnimationClip animation;
 
     public int damage;
+
+    public void GetAnimationTimeFromAnimation()
+    {
+        Debug.Log(animation.length);
+    }
 }

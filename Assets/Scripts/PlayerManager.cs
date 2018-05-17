@@ -101,11 +101,23 @@ public class PlayerManager : MonoBehaviour {
 
         if(movement.magnitude != 0)
         {
-            //Look in the direction the camera is facing
-            Vector3 targetDir = Camera.main.transform.forward;
-            Vector3 newDir = Vector3.RotateTowards(transform.forward, targetDir, turnTowardCameraSpeed * Time.deltaTime, 0.0f);
-            newDir.y = 0;
-            transform.rotation = Quaternion.LookRotation(newDir);
+            Camera mainCam = Camera.main;
+            if(!mainCam.GetComponent<CameraController>().IsLockedOn())
+            {
+                //Look in the direction the camera is facing
+                Vector3 targetDir = mainCam.transform.forward;
+                Vector3 newDir = Vector3.RotateTowards(transform.forward, targetDir, turnTowardCameraSpeed * Time.deltaTime, 0.0f);
+                newDir.y = 0;
+                transform.rotation = Quaternion.LookRotation(newDir);
+            }
+            else
+            {
+                Vector3 targetDir = mainCam.GetComponent<CameraController>().GetLockOnTarget().transform.position - transform.position;
+                Vector3 newDir = Vector3.RotateTowards(transform.forward, targetDir, turnTowardCameraSpeed * Time.deltaTime, 0.0f);
+                newDir.y = 0;
+                transform.rotation = Quaternion.LookRotation(newDir);
+            }
+            
         }  
     }
 

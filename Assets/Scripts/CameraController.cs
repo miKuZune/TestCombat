@@ -47,8 +47,6 @@ public class CameraController : MonoBehaviour {
 
         Vector3 newPos = new Vector3(newX, newY, newZ);
         transform.position = newPos;
-
-        
     }
 
     GameObject FindClosestObj(GameObject currObj, string tagTypeToFind)
@@ -96,6 +94,23 @@ public class CameraController : MonoBehaviour {
         transform.rotation = Quaternion.LookRotation(newDir);
     }
 
+
+    public bool IsLockedOn()
+    {
+        if(currLockOn == null)
+        {
+            return false;
+        }else
+        {
+            return true;
+        }
+    }
+
+    public GameObject GetLockOnTarget()
+    {
+        return currLockOn;
+    }
+
 	// Update is called once per frame
 	void Update ()
     {
@@ -108,7 +123,7 @@ public class CameraController : MonoBehaviour {
 
         if(!doingOtherStuff)
         {
-            if (currLockOn == null)
+            if (!IsLockedOn())
             {
                 MoveWithPlayerInput();
                 transform.LookAt(player.transform);
@@ -133,7 +148,6 @@ public class CameraController : MonoBehaviour {
                 }
 
             }
-
         }
         else
         {

@@ -11,6 +11,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 19e086dd41ef2dc49915b931b82f6431, type: 3}
   m_Name: LightAttack1
   m_EditorClassIdentifier: 
-  attackType: 
-  animation: {fileID: 0}
-  damage: 0
+  attackType: Light
+  animation: {fileID: 7400000, guid: ab48a091cb469c94daab74323d713eab, type: 2}
+  damage: 20
