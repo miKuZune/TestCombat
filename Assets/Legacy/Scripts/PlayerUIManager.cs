@@ -10,6 +10,8 @@ public class PlayerUIManager : MonoBehaviour {
 
 	public void SetHealthUI(float currHealth, float maxHealth)
 	{
+        if (healthUI == null) { return; }
+
 		float newSize = currHealth / maxHealth;
 		Debug.Log (newSize);
 
@@ -18,6 +20,7 @@ public class PlayerUIManager : MonoBehaviour {
 
 	public void SetComboUI(float currCombo, float maxCombo)
 	{
+        if (comboUI == null) { return; }
 		comboUI.size = currCombo / maxCombo;
 	}
 }

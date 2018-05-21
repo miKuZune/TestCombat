@@ -31,7 +31,7 @@ public class BasicEnemyAI : MonoBehaviour {
 		if (startHealth == 0) {startHealth = 20;}
 
 		this.gameObject.AddComponent<Health> ();
-		this.gameObject.GetComponent<Health> ().GainHealth (startHealth);
+		//this.gameObject.GetComponent<Health> ().GainHealth (startHealth);
 	}
 	
 	// Update is called once per frame

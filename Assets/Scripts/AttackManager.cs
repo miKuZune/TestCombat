@@ -32,6 +32,8 @@ public class AttackManager : MonoBehaviour {
         anim = GetComponent<Animator>();
         playerWeapon = GetComponentInChildren<Weapon>();
 
+        playerWeapon.SetHitTag("Enemy");
+
         animationQue = new Queue();
 	}
 	

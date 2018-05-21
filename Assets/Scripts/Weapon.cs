@@ -3,9 +3,14 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class Weapon : MonoBehaviour {
-
-
     int damage;
+
+    string hitTag;
+
+    public void SetHitTag(string newHitTag)
+    {
+        hitTag = newHitTag;
+    }
 
     public void SetDamage(int newDmg)
     {
@@ -14,9 +19,9 @@ public class Weapon : MonoBehaviour {
 
     void OnTriggerEnter(Collider other)
     {
-        if(other.gameObject.tag == "Enemy")
+        if(other.gameObject.tag == hitTag)
         {
-            Debug.Log(damage);
+            other.GetComponent<Health>().TakeDamage(damage);
         }
     }
 }

@@ -304,14 +304,15 @@
     <Compile Include="Assets\Legacy\Scripts\CameraFollowScript.cs" />
     <Compile Include="Assets\Legacy\Scripts\CharController.cs" />
     <Compile Include="Assets\Legacy\Scripts\EnemyDealDamage.cs" />
-    <Compile Include="Assets\Legacy\Scripts\Health.cs" />
     <Compile Include="Assets\Legacy\Scripts\PeriodicSpawner.cs" />
     <Compile Include="Assets\Legacy\Scripts\PlayerDealDamage.cs" />
     <Compile Include="Assets\Legacy\Scripts\PlayerUIManager.cs" />
     <Compile Include="Assets\Legacy\Scripts\UnitStats.cs" />
     <Compile Include="Assets\Scripts\Attack.cs" />
     <Compile Include="Assets\Scripts\AttackManager.cs" />
+    <Compile Include="Assets\Scripts\BasicAI.cs" />
     <Compile Include="Assets\Scripts\CameraController.cs" />
+    <Compile Include="Assets\Scripts\Health.cs" />
     <Compile Include="Assets\Scripts\InputController.cs" />
     <Compile Include="Assets\Scripts\PlayerManager.cs" />
     <Compile Include="Assets\Scripts\Weapon.cs" />

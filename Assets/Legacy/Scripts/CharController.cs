@@ -48,8 +48,8 @@ public class CharController : MonoBehaviour {
 		anim = GetComponent<Animator> ();
 
 		Health h = this.gameObject.AddComponent<Health> ();
-		h.SetHealth (maxHealth);
-		h.maxHealth = maxHealth;
+		//h.SetHealth (maxHealth);
+		//h.maxHealth = maxHealth;
 
 		this.GetComponent<PlayerUIManager> ().SetHealthUI (maxHealth, maxHealth);
 		this.GetComponent<PlayerUIManager> ().SetComboUI (0, maxCombo);

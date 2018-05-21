@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 public class PlayerManager : MonoBehaviour {
 
+    public int StartHealth;
+
     public float ForwardMoveSpeed;
     public float BackwardMoveSpeed;
     public float JumpPower;
@@ -25,6 +27,9 @@ public class PlayerManager : MonoBehaviour {
         IC = new InputController();
         playerRB = GetComponent<Rigidbody>();
         anim = GetComponent<Animator>();
+
+        Health h = gameObject.AddComponent<Health>();
+        h.Initalize(StartHealth, 2);
 	}
 	
     //Move the player in an upward direction.
