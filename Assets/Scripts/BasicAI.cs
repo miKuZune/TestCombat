@@ -18,6 +18,7 @@ public class BasicAI : MonoBehaviour {
 
     float timer;
 
+    bool seenPlayer;
     
 	// Use this for initialization
 	void Start ()
@@ -32,6 +33,8 @@ public class BasicAI : MonoBehaviour {
         AIweapon.SetHitTag("Player");
 
         player = GameObject.FindGameObjectWithTag("Player");
+
+        currState = int.MaxValue;
 	}
 	
     bool InAttackRange()
@@ -47,12 +50,34 @@ public class BasicAI : MonoBehaviour {
         }
     }
 
+    bool CanSeePlayer()
+    {
+        bool canSee = false;
+
+        Vector3 dirToPlayer = player.transform.position - transform.position;
+        dirToPlayer.Normalize();
+
+        float distToPlayer = Vector3.Distance(transform.position, player.transform.position) + 1;
+
+        RaycastHit hit;
+        
+        if(Physics.Raycast(transform.position, dirToPlayer, out hit, Mathf.Infinity))
+        {
+            if(hit.transform.tag == "Player")
+            {
+                canSee = true;
+            }
+        }
+
+        return canSee;
+    }
+
     void Attack()
     {
         currState = 1;
         timer = 0;
         AIagent.isStopped = true;
-        //Idk play an animation
+
         GetComponent<Animator>().Play("Attack");
     }
 
@@ -77,6 +102,10 @@ public class BasicAI : MonoBehaviour {
                     currState = 0;
                     AIagent.isStopped = false;
                 }
+                break;
+
+            default:
+                if (CanSeePlayer()) { currState = 1; }
                 break;
         }
 	}

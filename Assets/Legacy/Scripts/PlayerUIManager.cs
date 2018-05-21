@@ -13,7 +13,6 @@ public class PlayerUIManager : MonoBehaviour {
         if (healthUI == null) { return; }
 
 		float newSize = currHealth / maxHealth;
-		Debug.Log (newSize);
 
 		healthUI.size = newSize;
 	}
