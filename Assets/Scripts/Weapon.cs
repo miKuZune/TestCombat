@@ -22,6 +22,13 @@ public class Weapon : MonoBehaviour {
         if(other.gameObject.tag == hitTag)
         {
             other.GetComponent<Health>().TakeDamage(damage);
+
+            AttackManager attackManager = GetComponentInParent<AttackManager>();
+            if(attackManager != null)
+            {
+                attackManager.AddToCombo(10);
+            }
+
         }
     }
 }

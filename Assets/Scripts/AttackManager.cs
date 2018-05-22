@@ -22,6 +22,9 @@ public class AttackManager : MonoBehaviour {
     public int maxAnimationsInCombo;
     Queue animationQue;
     int animationsInCombo;
+
+    int comboCount;
+    public int maxCombo;
 	// Use this for initialization
 	void Start () {
 
@@ -37,6 +40,18 @@ public class AttackManager : MonoBehaviour {
         animationQue = new Queue();
 	}
 	
+    public void AddToCombo(int num)
+    {
+        comboCount += num;
+
+        if(comboCount > maxCombo)
+        {
+            comboCount = maxCombo;
+        }
+
+        GetComponent<PlayerUIManager>().SetComboUI(comboCount, maxCombo);
+    }
+
     void AddToAnimationQue(Attack[] attackToAdd)
     {
         if(animationsInCombo < maxAnimationsInCombo)
@@ -62,9 +77,11 @@ public class AttackManager : MonoBehaviour {
         }else if(IC.GetHeavy())
         {
             AddToAnimationQue(heavyAttacks);
-        }else if(IC.GetSpecial())
+        }else if(IC.GetSpecial() && comboCount > 50)
         {
             AddToAnimationQue(specialAttacks);
+            comboCount -= 50;
+            GetComponent<PlayerUIManager>().SetComboUI(comboCount, maxCombo);
         }
 
         //Play the next animation when the previous one is finished.
