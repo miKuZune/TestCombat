@@ -118,7 +118,7 @@ public class CameraController : MonoBehaviour {
         
         if(Input.GetKeyDown(KeyCode.Q))
         {
-            doingOtherStuff = !doingOtherStuff;
+            //doingOtherStuff = !doingOtherStuff;
         }
 
         if(!doingOtherStuff)

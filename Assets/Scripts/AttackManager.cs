@@ -80,8 +80,7 @@ public class AttackManager : MonoBehaviour {
         }else if(IC.GetSpecial() && comboCount > 50)
         {
             AddToAnimationQue(specialAttacks);
-            comboCount -= 50;
-            GetComponent<PlayerUIManager>().SetComboUI(comboCount, maxCombo);
+            
         }
 
         //Play the next animation when the previous one is finished.
@@ -91,6 +90,8 @@ public class AttackManager : MonoBehaviour {
             anim.Play(currAttack.animation.name);
             playerWeapon.SetDamage(currAttack.damage);
             animationFinishTime = currAttack.animation.length;
+
+            if (currAttack.attackType.ToLower() == "special") { comboCount -= 50; GetComponent<PlayerUIManager>().SetComboUI(comboCount, maxCombo); }
 
             timeSinceAnimPlayed = 0;
         }else if(timeSinceAnimPlayed >= animationFinishTime && animationQue.Count == 0)

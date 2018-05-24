@@ -20,6 +20,8 @@ public class Skeleboss : MonoBehaviour {
 
     public GameObject head;
 
+    public int health;
+
 	// Use this for initialization
 	void Start ()
     {
@@ -28,7 +30,7 @@ public class Skeleboss : MonoBehaviour {
         anim = GetComponent<Animator>();
 
         Health h = gameObject.AddComponent<Health>();
-        h.Initalize(400, 1);
+        h.Initalize(health, 1);
 
         isAttacking = false;
 	}

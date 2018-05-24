@@ -8,6 +8,7 @@ public class InputController{
 	float forwardMove;
 	float rightMove;
     bool jumped;
+    bool dodging;
 
     //Camera input
     float rightCam;
@@ -20,9 +21,21 @@ public class InputController{
     bool heavyAttackPressed;
     bool specialAttackPressed;
 
+    bool Paused;
+
+    public bool GetPaused()
+    {
+        return Input.GetButtonDown("Pause");
+    }
+
     public bool GetJumped()
     {
         return jumped;
+    }
+
+    public bool GetDodging()
+    {
+        return dodging;
     }
 	
     public float GetForwardMove()
@@ -76,12 +89,15 @@ public class InputController{
         forwardMove = Input.GetAxis("AxisYMove");
         rightMove = Input.GetAxis("AxisXMove");
         jumped = Input.GetButtonDown("Jump");
+        dodging = Input.GetButton("Dodge");
     }
 
     public void UpdateCameraInput()
     {
         rightCam = Input.GetAxis("CamXAxis");
         upCam = Input.GetAxis("CamYAxis");
+
+        Debug.Log("Right " + rightCam);
         lockPressed = Input.GetButtonDown("Lock");
         lockChangePressed = Input.GetButtonDown("LockTargetChange");
     }

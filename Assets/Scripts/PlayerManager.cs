@@ -21,6 +21,11 @@ public class PlayerManager : MonoBehaviour {
 
     Animator anim;
 
+    public float maxDodgeTime;
+    public float dodgeResetTime;
+    float timeDodging;
+    float timeToResetDodge;
+
 	// Use this for initialization
 	void Start ()
     {
@@ -80,6 +85,7 @@ public class PlayerManager : MonoBehaviour {
         //Set animations
         anim.SetFloat("forwardMove", IC.GetForwardMove());
         anim.SetFloat("sidewaysMove", IC.GetRightMove());
+        anim.SetBool("dodge", false);
 
         float currMoveSpeedLimiter = 0;
         //Check if the player is moving forward or backwards, limit their speed accordingly.
@@ -123,12 +129,52 @@ public class PlayerManager : MonoBehaviour {
                 transform.rotation = Quaternion.LookRotation(newDir);
             }
             
-        }  
+        }
+    }
+
+    void Dodge()
+    {
+        Vector3 movement = (transform.forward * IC.GetForwardMove()) + (transform.right * IC.GetRightMove());
+
+        movement.Normalize();
+        //Make the player move backwards if they arn't giving any movement commands.
+        if(movement == Vector3.zero){movement = -transform.forward;}
+
+        //Check the nearby area for and walls and stop movement if there are some found.
+        float currMoveSpeedLimiter = ForwardMoveSpeed * 2;
+        RaycastHit hit;
+        float sweepDist = movement.magnitude * Time.deltaTime + SweepDistanceBuffer;
+        if (playerRB.SweepTest(movement, out hit, sweepDist))
+        {
+            playerRB.velocity = new Vector3(0, playerRB.velocity.y, 0);
+        }
+        //Checks if the players maginitude will exceed the players movespeed.
+        else if (XZMagnitude(playerRB.velocity.x, playerRB.velocity.z) < currMoveSpeedLimiter)
+        {
+            playerRB.AddForce(movement * ForwardMoveSpeed * 2 * movementAddition);
+        }
+
+        timeToResetDodge = dodgeResetTime;
+
+        anim.SetBool("dodge", true);
+    }
+
+    void CheckAndResetDodge()
+    {
+        timeToResetDodge -= Time.deltaTime;
+        if(timeToResetDodge <= 0)
+        {
+            timeDodging = 0;
+        }
     }
 
 	void Update ()
     {
         IC.UpdateMovementInput();
-        Movement();
+
+        if (IC.GetDodging() && timeDodging < maxDodgeTime) { Dodge();  timeDodging += Time.deltaTime; Debug.Log("Dodging"); }
+        else{ Movement();  CheckAndResetDodge(); Debug.Log("Moving"); }
+
+        if (IC.GetPaused()) { GetComponent<PauseMenu>().PauseGame(); }
     }
 }
