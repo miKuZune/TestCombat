@@ -20,6 +20,8 @@ public class CameraController : MonoBehaviour {
 
     bool doingOtherStuff;
 
+    public float nonPlayerYOffset;
+
 	// Use this for initialization
 	void Start () {
         IC = new InputController();
@@ -43,7 +45,7 @@ public class CameraController : MonoBehaviour {
         {
             camOffsetY = -minYOffset;
         }
-        float newY = player.transform.position.y + camOffsetY;
+        float newY = player.transform.position.y + camOffsetY + nonPlayerYOffset;
 
         Vector3 newPos = new Vector3(newX, newY, newZ);
         transform.position = newPos;
