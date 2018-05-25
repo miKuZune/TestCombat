@@ -22,8 +22,10 @@ public class CameraController : MonoBehaviour {
 
     public float nonPlayerYOffset;
 
-	// Use this for initialization
-	void Start () {
+    public GameObject objToLookAt;
+
+    // Use this for initialization
+    void Start () {
         IC = new InputController();
         player = GameObject.FindGameObjectWithTag("Player");
         doingOtherStuff = false;
@@ -128,7 +130,7 @@ public class CameraController : MonoBehaviour {
             if (!IsLockedOn())
             {
                 MoveWithPlayerInput();
-                transform.LookAt(player.transform);
+                transform.LookAt(objToLookAt.transform);
                 if (IC.GetLockPressed())
                 {
                     currLockOn = FindClosestObj(gameObject, "Enemy");
