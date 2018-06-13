@@ -1,12 +1,13 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class AttackManager : MonoBehaviour {
 
-    public Attack[] lightAttacks;
-    public Attack[] heavyAttacks;
-    public Attack[] specialAttacks;
+    public Attack firstLight;
+    public Attack firstHeavy;
+    public Attack special;
 
     InputController IC;
     Animator anim;
@@ -21,6 +22,8 @@ public class AttackManager : MonoBehaviour {
 
     public int maxAnimationsInCombo;
     Queue animationQue;
+    Attack recentAttack;
+
     int animationsInCombo;
 
     int comboCount;
@@ -52,13 +55,62 @@ public class AttackManager : MonoBehaviour {
         GetComponent<PlayerUIManager>().SetComboUI(comboCount, maxCombo);
     }
 
-    void AddToAnimationQue(Attack[] attackToAdd)
+    Attack GetStartingAttackOfType(string attackType)
+    {
+        Attack attToAdd = null;
+        switch (attackType)
+        {
+            case "Light":
+                attToAdd = firstLight;
+                break;
+
+            case "Heavy":
+                attToAdd = firstHeavy;
+                break;
+
+            case "Special":
+                attToAdd = special;
+                break;
+        }
+        Debug.Log(attToAdd.attackType);
+        return attToAdd;
+    }
+
+    void AddToAnimationQue(string attackTypeToAdd)
     {
         if(animationsInCombo < maxAnimationsInCombo)
         {
-            if (currAnimIndex >= attackToAdd.Length) { currAnimIndex = 0; }
+            Attack attToAdd = null;
+            //Check if there is a most recent attack.
+            if(recentAttack == null)
+            {
+                attToAdd = GetStartingAttackOfType(attackTypeToAdd);
+            }else
+            {
+                //Get the next attack from the object
+                switch(attackTypeToAdd)
+                {
+                    case "Light":
+                        attToAdd = recentAttack.nextLight;
+                        break;
 
-            animationQue.Enqueue(attackToAdd[currAnimIndex]);
+                    case "Heavy":
+                        attToAdd = recentAttack.nextHeavy;
+                        break;
+
+                    case "Special":
+                        attToAdd = special;
+                        break;
+                }
+            }
+            //Checks incase the objects used do not have links to further attacks.
+            if(attToAdd == null)
+            {
+                attToAdd = GetStartingAttackOfType(attackTypeToAdd);
+            }
+
+            animationQue.Enqueue(attToAdd);
+            recentAttack = attToAdd;
             currAnimIndex++;
             animationsInCombo++;
         }
@@ -73,14 +125,13 @@ public class AttackManager : MonoBehaviour {
         //Takes the inputs and then looks to add a new item to the que.
         if(IC.GetLight())
         {
-            AddToAnimationQue(lightAttacks);
+            AddToAnimationQue("Light");
         }else if(IC.GetHeavy())
         {
-            AddToAnimationQue(heavyAttacks);
+            AddToAnimationQue("Heavy");
         }else if(IC.GetSpecial() && comboCount > 50)
         {
-            AddToAnimationQue(specialAttacks);
-            
+            AddToAnimationQue("Special");
         }
 
         //Play the next animation when the previous one is finished.
@@ -105,6 +156,7 @@ public class AttackManager : MonoBehaviour {
             currAnimIndex = 0;
             timeSinceAnimPlayed = 0;
             animationFinishTime = 0;
+            recentAttack = null;
         }
 	}
 }

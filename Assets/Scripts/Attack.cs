@@ -11,6 +11,9 @@ public class Attack : ScriptableObject
 
     public int damage;
 
+    public Attack nextLight;
+    public Attack nextHeavy;
+
     public void GetAnimationTimeFromAnimation()
     {
         Debug.Log(animation.length);

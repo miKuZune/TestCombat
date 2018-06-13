@@ -97,8 +97,7 @@ public class InputController{
         rightCam = Input.GetAxis("CamXAxis");
         upCam = Input.GetAxis("CamYAxis");
 
-        Debug.Log("Right " + rightCam);
-        lockPressed = Input.GetButtonDown("Lock");
+        lockPressed = Input.GetButtonUp("Lock");
         lockChangePressed = Input.GetButtonDown("LockTargetChange");
     }
 

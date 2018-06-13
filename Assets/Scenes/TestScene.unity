@@ -51013,13 +51013,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a4cce784b01a15b4e83413f69a1e877f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  lightAttacks:
-  - {fileID: 11400000, guid: aea875394f2f6a94c941632bd118afd0, type: 2}
-  - {fileID: 11400000, guid: 1505ad91aebea8d4ba766e12c5a129da, type: 2}
-  heavyAttacks:
-  - {fileID: 11400000, guid: 6b94a37c8b4efec478f828c77b99f3c9, type: 2}
-  specialAttacks:
-  - {fileID: 11400000, guid: 7b6248484b6808a489f0e7d2ded5bcad, type: 2}
+  firstLight: {fileID: 11400000, guid: aea875394f2f6a94c941632bd118afd0, type: 2}
+  firstHeavy: {fileID: 11400000, guid: 6b94a37c8b4efec478f828c77b99f3c9, type: 2}
+  special: {fileID: 11400000, guid: 7b6248484b6808a489f0e7d2ded5bcad, type: 2}
   timeToResetAnimations: 2.5
   maxAnimationsInCombo: 5
   maxCombo: 100

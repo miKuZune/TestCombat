@@ -14,3 +14,5 @@ MonoBehaviour:
   attackType: Light
   animation: {fileID: 7400000, guid: f9611f918858af0479d2e5e884e8b4d9, type: 2}
   damage: 20
+  nextLight: {fileID: 11400000, guid: aea875394f2f6a94c941632bd118afd0, type: 2}
+  nextHeavy: {fileID: 11400000, guid: 6b94a37c8b4efec478f828c77b99f3c9, type: 2}

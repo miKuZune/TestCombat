@@ -14,3 +14,5 @@ MonoBehaviour:
   attackType: Heavy
   animation: {fileID: 7400000, guid: 8e8a4f227493b0441975fa1e1b0ed21e, type: 2}
   damage: 40
+  nextLight: {fileID: 11400000, guid: aea875394f2f6a94c941632bd118afd0, type: 2}
+  nextHeavy: {fileID: 11400000}
