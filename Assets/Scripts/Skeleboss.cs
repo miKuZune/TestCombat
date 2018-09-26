@@ -37,7 +37,6 @@ public class Skeleboss : MonoBehaviour {
 	
     void RotateTowardObj(GameObject toRotate)
     {
-        Debug.Log("rotating");
         Vector3 targetDir = player.transform.position - toRotate.transform.position;
 
         float step = 5 * Time.deltaTime;

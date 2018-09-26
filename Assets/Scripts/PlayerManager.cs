@@ -172,8 +172,8 @@ public class PlayerManager : MonoBehaviour {
     {
         IC.UpdateMovementInput();
 
-        if (IC.GetDodging() && timeDodging < maxDodgeTime) { Dodge();  timeDodging += Time.deltaTime; Debug.Log("Dodging"); }
-        else{ Movement();  CheckAndResetDodge(); Debug.Log("Moving"); }
+        if (IC.GetDodging() && timeDodging < maxDodgeTime) { Dodge();  timeDodging += Time.deltaTime; }
+        else{ Movement();  CheckAndResetDodge();}
 
         if (IC.GetPaused()) { GetComponent<PauseMenu>().PauseGame(); }
     }

@@ -75,7 +75,16 @@ public class CameraController : MonoBehaviour {
 
     void LookAtObject(GameObject objToLookAt)
     {
-        transform.LookAt(objToLookAt.transform);
+        Vector3 lookAtPos = objToLookAt.transform.position;
+
+        lookAtPos.y = transform.rotation.y;
+
+        transform.LookAt(lookAtPos);
+    }
+
+    void LookAtObject(Vector3 lookAtPos)
+    {
+        transform.LookAt(lookAtPos);
     }
 
     void FollowWithOffset(Vector3 offset)
@@ -89,6 +98,21 @@ public class CameraController : MonoBehaviour {
         transform.position = newPos;
     }
 
+    void StaticFollow()
+    {
+        Vector3 newPos = player.transform.position - player.transform.forward;
+
+        newPos.z -= 2.3f;
+        newPos.y = transform.position.y;
+
+        transform.position = newPos;
+    }
+
+    Vector3 CalculateEnemyPlayerMidPoint(Vector3 playerPos, Vector3 enemyPos)
+    {
+        return enemyPos - playerPos;
+    }
+
     void TransitionToMoveTo(GameObject objToMoveTo)
     {
         transform.position = Vector3.MoveTowards(transform.position, objToMoveTo.transform.position, 0.15f);
@@ -96,6 +120,25 @@ public class CameraController : MonoBehaviour {
         Vector3 targetDir = objToMoveTo.transform.position - transform.position;
         Vector3 newDir = Vector3.RotateTowards(transform.position, targetDir, 1.5f, 0.0f);
         transform.rotation = Quaternion.LookRotation(newDir);
+    }
+
+    GameObject FindEnemyHead(GameObject enemy)
+    {
+        GameObject enemyhead = null;
+
+        if (enemy != null)
+        {
+            enemyhead = enemy.transform.Find("Bip01").gameObject;
+        }
+        else
+        {
+            return null;
+        }
+        
+
+        if (enemyhead != null) { return enemyhead; }
+        else { return null; }
+            
     }
 
 
@@ -138,8 +181,9 @@ public class CameraController : MonoBehaviour {
             }
             else
             {
-                FollowWithOffset(lockOnOffset);
+                StaticFollow();
                 LookAtObject(currLockOn);
+
 
                 if (IC.GetLockTargetChange())
                 {

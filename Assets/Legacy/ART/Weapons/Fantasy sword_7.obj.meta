@@ -3,22 +3,30 @@ guid: d910966366eb95a488f15f5ff6f0cd20
 timeCreated: 1524855676
 licenseType: Free
 ModelImporter:
-  serializedVersion: 22
+  serializedVersion: 19
   fileIDToRecycleName:
     100000: //RootNode
     100002: Group1
+    100004: Group1_MeshPart0
+    100006: Group1_MeshPart1
     400000: //RootNode
     400002: Group1
+    400004: Group1_MeshPart0
+    400006: Group1_MeshPart1
     2100000: Group1Mat
     2300000: Group1
+    2300002: Group1_MeshPart0
+    2300004: Group1_MeshPart1
     3300000: Group1
+    3300002: Group1_MeshPart0
+    3300004: Group1_MeshPart1
     4300000: Group1
-  externalObjects: {}
+    4300002: Group1_MeshPart0
+    4300004: Group1_MeshPart1
   materials:
     importMaterials: 1
     materialName: 0
     materialSearch: 1
-    materialLocation: 1
   animations:
     legacyGenerateAnimations: 4
     bakeSimulation: 0
@@ -31,14 +39,12 @@ ModelImporter:
     animationImportWarnings: 
     animationRetargetingWarnings: 
     animationDoRetargetingWarnings: 0
-    importAnimatedCustomProperties: 0
     animationCompression: 1
     animationRotationError: 0.5
     animationPositionError: 0.5
     animationScaleError: 0.5
     animationWrapMode: 0
     extraExposedTransformPaths: []
-    extraUserProperties: []
     clipAnimations: []
     isReadable: 1
   meshes:
@@ -46,18 +52,13 @@ ModelImporter:
     globalScale: 1
     meshCompression: 0
     addColliders: 0
-    importVisibility: 1
     importBlendShapes: 1
-    importCameras: 1
-    importLights: 1
     swapUVChannels: 0
     generateSecondaryUV: 0
     useFileUnits: 1
     optimizeMeshForGPU: 1
     keepQuads: 0
     weldVertices: 1
-    preserveHierarchy: 0
-    indexFormat: 0
     secondaryUVAngleDistortion: 8
     secondaryUVAreaDistortion: 15.000001
     secondaryUVHardAngle: 88
@@ -67,7 +68,6 @@ ModelImporter:
     normalSmoothAngle: 60
     normalImportMode: 0
     tangentImportMode: 3
-    normalCalculationMode: 4
   importAnimation: 1
   copyAvatar: 0
   humanDescription:

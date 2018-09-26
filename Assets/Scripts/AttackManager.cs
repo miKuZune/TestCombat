@@ -72,7 +72,6 @@ public class AttackManager : MonoBehaviour {
                 attToAdd = special;
                 break;
         }
-        Debug.Log(attToAdd.attackType);
         return attToAdd;
     }
 
