@@ -5,9 +5,16 @@ using UnityEngine;
 public class CameraController : MonoBehaviour {
 
     public float distanceFromPlayer;
+    public float nonPlayerYOffset;
 
-    InputController IC;
-    GameObject player;
+    public GameObject player;
+    public GameObject target;
+
+    public GameObject lookAtGO;
+    public GameObject posGo;
+
+    public float yOffset;
+    public float xOffset;
 
     float camOffsetXZ;
     float camOffsetY;
@@ -15,42 +22,50 @@ public class CameraController : MonoBehaviour {
     public float maxYOffset;
     public float minYOffset;
 
-    GameObject currLockOn;
-    public Vector3 lockOnOffset;
-
-    bool doingOtherStuff;
-
-    public float nonPlayerYOffset;
-
-    public GameObject objToLookAt;
-
-    // Use this for initialization
-    void Start () {
+    InputController IC;
+    
+	// Use this for initialization
+	void Start ()
+    {
         IC = new InputController();
-        player = GameObject.FindGameObjectWithTag("Player");
-        doingOtherStuff = false;
+        camOffsetY = 0;
 	}
 
-    void MoveWithPlayerInput()
+    public bool IsLockedOn()
     {
-        camOffsetXZ -= IC.GetRightCamMovement();
-        camOffsetY += IC.GetUpCamMovement();
+        if (target == null) { return false; }
+        else { return true; }
+    }
 
-        float newX = player.transform.position.x + Mathf.Cos(camOffsetXZ) * distanceFromPlayer;
-        float newZ = player.transform.position.z + Mathf.Sin(camOffsetXZ) * distanceFromPlayer;
+    public GameObject GetLockOnTarget()
+    {
+        return target;
+    }
 
-        if (camOffsetY > maxYOffset)
-        {
-            camOffsetY = maxYOffset;
-        }
-        else if (camOffsetY < -minYOffset)
-        {
-            camOffsetY = -minYOffset;
-        }
-        float newY = player.transform.position.y + camOffsetY + nonPlayerYOffset;
+    void FollowEnemy()
+    {
+        lookAtGO.transform.position = target.transform.position;
 
-        Vector3 newPos = new Vector3(newX, newY, newZ);
-        transform.position = newPos;
+
+        Vector3 dirToTarget = player.transform.position - target.transform.position;
+        dirToTarget.Normalize();
+
+        Vector3 camPos = player.transform.position + (dirToTarget * 3);
+        camPos.y += yOffset;
+        camPos.x += xOffset;
+
+        posGo.transform.position = camPos;
+    }
+
+    void FollowPlayer()
+    {
+        lookAtGO.transform.position = player.transform.position;
+
+        Vector3 camPos = player.transform.position - (player.transform.forward * 3);
+        camPos.x += xOffset;
+        camPos.y += yOffset;
+
+        posGo.transform.position = camPos;
     }
 
     GameObject FindClosestObj(GameObject currObj, string tagTypeToFind)
@@ -60,10 +75,10 @@ public class CameraController : MonoBehaviour {
 
         GameObject[] objsWithTag = GameObject.FindGameObjectsWithTag(tagTypeToFind);
 
-        for(int i = 0; i < objsWithTag.Length; i++)
+        for (int i = 0; i < objsWithTag.Length; i++)
         {
-            float dist = Vector3.Distance( currObj.transform.position , objsWithTag[i].transform.position);
-            if(dist < closestDist && currObj != objsWithTag[i])
+            float dist = Vector3.Distance(currObj.transform.position, objsWithTag[i].transform.position);
+            if (dist < closestDist && currObj != objsWithTag[i])
             {
                 closestDist = dist;
                 closestObj = objsWithTag[i];
@@ -73,133 +88,55 @@ public class CameraController : MonoBehaviour {
         return closestObj;
     }
 
-    void LookAtObject(GameObject objToLookAt)
+    void MoveWithPlayerInput()
     {
-        Vector3 lookAtPos = objToLookAt.transform.position;
+        camOffsetXZ -= IC.GetRightCamMovement();
+        camOffsetY += IC.GetUpCamMovement();
 
-        lookAtPos.y = transform.rotation.y;
-
-        transform.LookAt(lookAtPos);
-    }
-
-    void LookAtObject(Vector3 lookAtPos)
-    {
-        transform.LookAt(lookAtPos);
-    }
-
-    void FollowWithOffset(Vector3 offset)
-    {
-        Vector3 normalisedPlayerForward = player.transform.forward;
-        normalisedPlayerForward.Normalize();
-        Vector3 newPos = player.transform.position + (-transform.forward * offset.z) + (transform.right * offset.x);
-
-        newPos.y += offset.y;
-
-        transform.position = newPos;
-    }
-
-    void StaticFollow()
-    {
-        Vector3 newPos = player.transform.position - player.transform.forward;
-
-        newPos.z -= 2.3f;
-        newPos.y = transform.position.y;
-
-        transform.position = newPos;
-    }
-
-    Vector3 CalculateEnemyPlayerMidPoint(Vector3 playerPos, Vector3 enemyPos)
-    {
-        return enemyPos - playerPos;
-    }
-
-    void TransitionToMoveTo(GameObject objToMoveTo)
-    {
-        transform.position = Vector3.MoveTowards(transform.position, objToMoveTo.transform.position, 0.15f);
+        float newX = player.transform.position.x + Mathf.Cos(camOffsetXZ) * distanceFromPlayer;
+        float newZ = player.transform.position.z + Mathf.Sin(camOffsetXZ) * distanceFromPlayer;
         
-        Vector3 targetDir = objToMoveTo.transform.position - transform.position;
-        Vector3 newDir = Vector3.RotateTowards(transform.position, targetDir, 1.5f, 0.0f);
-        transform.rotation = Quaternion.LookRotation(newDir);
+        if (camOffsetY > maxYOffset)
+        {
+            camOffsetY = maxYOffset;
+        }
+        else if (camOffsetY < minYOffset)
+        {
+            camOffsetY = minYOffset;
+        }
+        float newY = player.transform.position.y + camOffsetY + nonPlayerYOffset;
+        
+        Vector3 newPos = new Vector3(newX, newY, newZ);
+        posGo.transform.position = newPos;
+        lookAtGO.transform.position = player.transform.position;
     }
 
-    GameObject FindEnemyHead(GameObject enemy)
+    // Update is called once per frame
+    void Update ()
     {
-        GameObject enemyhead = null;
-
-        if (enemy != null)
+        if(target == null)
         {
-            enemyhead = enemy.transform.Find("Bip01").gameObject;
+            MoveWithPlayerInput();
         }
         else
         {
-            return null;
+            FollowEnemy();
         }
-        
-
-        if (enemyhead != null) { return enemyhead; }
-        else { return null; }
-            
-    }
 
 
-    public bool IsLockedOn()
-    {
-        if(currLockOn == null)
-        {
-            return false;
-        }else
-        {
-            return true;
-        }
-    }
-
-    public GameObject GetLockOnTarget()
-    {
-        return currLockOn;
-    }
-
-	// Update is called once per frame
-	void Update ()
-    {
         IC.UpdateCameraInput();
-        
-        if(Input.GetKeyDown(KeyCode.Q))
+        if(IC.GetLockPressed())
         {
-            //doingOtherStuff = !doingOtherStuff;
-        }
-
-        if(!doingOtherStuff)
-        {
-            if (!IsLockedOn())
+            if(target == null)
             {
-                MoveWithPlayerInput();
-                transform.LookAt(objToLookAt.transform);
-                if (IC.GetLockPressed())
-                {
-                    currLockOn = FindClosestObj(gameObject, "Enemy");
-                }
+                target = FindClosestObj(gameObject, "Enemy");
             }
             else
             {
-                StaticFollow();
-                LookAtObject(currLockOn);
-
-
-                if (IC.GetLockTargetChange())
-                {
-                    currLockOn = FindClosestObj(currLockOn, "Enemy");
-                }
-
-                if (IC.GetLockPressed())
-                {
-                    currLockOn = null;
-                }
-
+                target = null;
             }
         }
-        else
-        {
-            TransitionToMoveTo(GameObject.Find("Face"));
-        }
+
+
 	}
 }
