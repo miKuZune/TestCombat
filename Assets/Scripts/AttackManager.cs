@@ -122,7 +122,7 @@ public class AttackManager : MonoBehaviour {
         timeSinceAnimPlayed += Time.deltaTime;
 
         //Takes the inputs and then looks to add a new item to the que.
-        if(IC.GetLight())
+        /*if(IC.GetLight())
         {
             AddToAnimationQue("Light");
         }else if(IC.GetHeavy())
@@ -131,6 +131,11 @@ public class AttackManager : MonoBehaviour {
         }else if(IC.GetSpecial() && comboCount > 50)
         {
             AddToAnimationQue("Special");
+        }*/
+
+        if (IC.GetLight())
+        {
+            anim.SetTrigger("Attack");
         }
 
         //Play the next animation when the previous one is finished.
