@@ -51099,8 +51099,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   StartHealth: 100
-  ForwardMoveSpeed: 7
-  BackwardMoveSpeed: 6
+  ForwardMoveSpeed: 6
+  BackwardMoveSpeed: 3
   JumpPower: 5
   DistanceToBeGrouned: 1.5
   SweepDistanceBuffer: 0.05
@@ -51675,7 +51675,7 @@ MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1087714480}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 776adaaacdc5c4e8ab0395120a6e972b, type: 3}
   m_Name: 
@@ -58811,7 +58811,7 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1240131379}
-  m_LocalRotation: {x: -0.36165065, y: -0.4856116, z: -0.23055604, w: 0.761731}
+  m_LocalRotation: {x: -0.36165068, y: -0.48561162, z: -0.23055607, w: 0.761731}
   m_LocalPosition: {x: 2.278848, y: 0.013757685, z: -10.928908}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -67623,7 +67623,7 @@ Transform:
     type: 2}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1440509842}
-  m_LocalRotation: {x: -0.36165065, y: -0.4856116, z: -0.23055604, w: 0.761731}
+  m_LocalRotation: {x: -0.36165068, y: -0.48561162, z: -0.23055607, w: 0.761731}
   m_LocalPosition: {x: 2.278848, y: 0.013757685, z: -10.928908}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []

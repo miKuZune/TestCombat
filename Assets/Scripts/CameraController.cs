@@ -92,7 +92,8 @@ public class CameraController : MonoBehaviour {
     {
         camOffsetXZ -= IC.GetRightCamMovement();
         camOffsetY += IC.GetUpCamMovement();
-
+        
+        
         float newX = player.transform.position.x + Mathf.Cos(camOffsetXZ) * distanceFromPlayer;
         float newZ = player.transform.position.z + Mathf.Sin(camOffsetXZ) * distanceFromPlayer;
         
@@ -107,8 +108,13 @@ public class CameraController : MonoBehaviour {
         float newY = player.transform.position.y + camOffsetY + nonPlayerYOffset;
         
         Vector3 newPos = new Vector3(newX, newY, newZ);
+        
         posGo.transform.position = newPos;
         lookAtGO.transform.position = player.transform.position;
+
+        //This is an artists code :^)
+        //when.game (is) being.played;; initiate.fun 
+        //combat=active gameObject.good combat
     }
 
     // Update is called once per frame

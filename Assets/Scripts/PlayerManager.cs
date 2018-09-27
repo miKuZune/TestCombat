@@ -26,6 +26,8 @@ public class PlayerManager : MonoBehaviour {
     float timeDodging;
     float timeToResetDodge;
 
+    GameObject yeet;
+
 	// Use this for initialization
 	void Start ()
     {
@@ -35,6 +37,8 @@ public class PlayerManager : MonoBehaviour {
 
         Health h = gameObject.AddComponent<Health>();
         h.Initalize(StartHealth, 2);
+
+        yeet = Instantiate(new GameObject(), transform.position, transform.rotation);
 	}
 	
     //Move the player in an upward direction.
@@ -107,17 +111,31 @@ public class PlayerManager : MonoBehaviour {
         //Checks if the players maginitude will exceed the players movespeed.
         else if (XZMagnitude(playerRB.velocity.x, playerRB.velocity.z) < currMoveSpeedLimiter)
         {
-            playerRB.AddForce(movement * ForwardMoveSpeed * movementAddition);
+            Vector3 newPos = transform.position;
+            //Debug.Log(movement + " " + ForwardMoveSpeed * movementAddition);
+            if(IC.GetForwardMove() > 0)
+            {
+                newPos = transform.position + (movement * IC.GetForwardMove() * ForwardMoveSpeed * movementAddition) * Time.deltaTime;
+            }else if(IC.GetForwardMove() < 0)
+            {
+                newPos = transform.position + (movement * -IC.GetForwardMove() * ForwardMoveSpeed * movementAddition) * Time.deltaTime;
+            }
+
+            Debug.Log(newPos);
+
+            transform.position = newPos;
+            //playerRB.AddForce(movement * ForwardMoveSpeed * movementAddition);
         }
 
+        //Look in direction while moving
         if(movement.magnitude != 0)
         {
             Camera mainCam = Camera.main;
             if(!mainCam.GetComponent<CameraController>().IsLockedOn())
             {
                 //Look in the direction the camera is facing
-                Vector3 targetDir = mainCam.transform.forward;
-                Vector3 newDir = Vector3.RotateTowards(transform.forward, targetDir, turnTowardCameraSpeed * Time.deltaTime, 0.0f);
+                Vector3 targetDir = movement;
+                Vector3 newDir =  movement;//Vector3.RotateTowards(transform.forward, targetDir, turnTowardCameraSpeed * Time.deltaTime, 0.0f);
                 newDir.y = 0;
                 transform.rotation = Quaternion.LookRotation(newDir);
             }
@@ -130,6 +148,21 @@ public class PlayerManager : MonoBehaviour {
             }
             
         }
+    }
+
+    void MoveForwardDirectionControl()
+    {
+        Vector3 lookAtPos = playerRB.transform.position;
+        lookAtPos.z += IC.GetForwardMove() + Camera.main.transform.forward.z;
+        lookAtPos.x += IC.GetRightMove() + Camera.main.transform.forward.x;
+        lookAtPos.y = transform.position.y;
+        yeet.transform.position = lookAtPos;
+
+        Debug.Log(Camera.main.transform.forward + " " + lookAtPos);
+        transform.LookAt(lookAtPos);
+
+
+        //transform.position = transform.position + (transform.forward * ForwardMoveSpeed * IC.GetForwardMove() * Time.deltaTime);
     }
 
     void Dodge()
@@ -173,7 +206,7 @@ public class PlayerManager : MonoBehaviour {
         IC.UpdateMovementInput();
 
         if (IC.GetDodging() && timeDodging < maxDodgeTime) { Dodge();  timeDodging += Time.deltaTime; }
-        else{ Movement();  CheckAndResetDodge();}
+        else{ MoveForwardDirectionControl();  CheckAndResetDodge();}
 
         if (IC.GetPaused()) { GetComponent<PauseMenu>().PauseGame(); }
     }
