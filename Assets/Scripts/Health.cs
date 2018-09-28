@@ -62,6 +62,10 @@ public class Health : MonoBehaviour {
     void OnPlayerDeath()
     {
         Debug.Log("Player has died");
+        GameObject deathUI = GetComponent<PlayerManager>().GetDeathUIGameObject();
+        deathUI.SetActive(true);
+
+        Destroy(this.gameObject);
     }
 
     void OnDeath(int switchCase)

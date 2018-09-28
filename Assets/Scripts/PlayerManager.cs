@@ -26,7 +26,7 @@ public class PlayerManager : MonoBehaviour {
     float timeDodging;
     float timeToResetDodge;
 
-    GameObject yeet;
+    GameObject deathUI;
 
 	// Use this for initialization
 	void Start ()
@@ -38,8 +38,14 @@ public class PlayerManager : MonoBehaviour {
         Health h = gameObject.AddComponent<Health>();
         h.Initalize(StartHealth, 2);
 
-        yeet = Instantiate(new GameObject(), transform.position, transform.rotation);
+        deathUI = GameObject.Find("DeathUI");
+        deathUI.SetActive(false);
 	}
+
+    public GameObject GetDeathUIGameObject()
+    {
+        return deathUI;
+    }
 	
     //Move the player in an upward direction.
     void Jump()
@@ -71,139 +77,61 @@ public class PlayerManager : MonoBehaviour {
         return magnitude;
     }
 
-    //Handle the players movement.
-    void Movement()
-    {
-        Vector3 movement = (transform.forward * IC.GetForwardMove()) + (transform.right * IC.GetRightMove());
-
-        movement.Normalize();
-
-        if (IC.GetJumped())
-        {
-            if (IsGrouned())
-            {
-                Jump();
-            }
-        }
-
-        //Set animations
-        anim.SetFloat("forwardMove", IC.GetForwardMove());
-        anim.SetFloat("sidewaysMove", IC.GetRightMove());
-        anim.SetBool("dodge", false);
-
-        float currMoveSpeedLimiter = 0;
-        //Check if the player is moving forward or backwards, limit their speed accordingly.
-        if(IC.GetForwardMove() >= 0)
-        {
-            currMoveSpeedLimiter = ForwardMoveSpeed;
-        }else if(IC.GetForwardMove() < 0)
-        {
-            currMoveSpeedLimiter = BackwardMoveSpeed;
-        }
-
-        //Checks if the player is going to colide with an object.
-        RaycastHit hit;
-        float sweepDist = movement.magnitude * Time.deltaTime + SweepDistanceBuffer;
-        if (playerRB.SweepTest(movement, out hit, sweepDist))
-        {
-            playerRB.velocity = new Vector3(0, playerRB.velocity.y, 0);
-        }
-        //Checks if the players maginitude will exceed the players movespeed.
-        else if (XZMagnitude(playerRB.velocity.x, playerRB.velocity.z) < currMoveSpeedLimiter)
-        {
-            Vector3 newPos = transform.position;
-            //Debug.Log(movement + " " + ForwardMoveSpeed * movementAddition);
-            if(IC.GetForwardMove() > 0)
-            {
-                newPos = transform.position + (movement * IC.GetForwardMove() * ForwardMoveSpeed * movementAddition) * Time.deltaTime;
-            }else if(IC.GetForwardMove() < 0)
-            {
-                newPos = transform.position + (movement * -IC.GetForwardMove() * ForwardMoveSpeed * movementAddition) * Time.deltaTime;
-            }
-
-            Debug.Log(newPos);
-
-            transform.position = newPos;
-            //playerRB.AddForce(movement * ForwardMoveSpeed * movementAddition);
-        }
-
-        //Look in direction while moving
-        if(movement.magnitude != 0)
-        {
-            Camera mainCam = Camera.main;
-            if(!mainCam.GetComponent<CameraController>().IsLockedOn())
-            {
-                //Look in the direction the camera is facing
-                Vector3 targetDir = movement;
-                Vector3 newDir =  movement;//Vector3.RotateTowards(transform.forward, targetDir, turnTowardCameraSpeed * Time.deltaTime, 0.0f);
-                newDir.y = 0;
-                transform.rotation = Quaternion.LookRotation(newDir);
-            }
-            else
-            {
-                Vector3 targetDir = mainCam.GetComponent<CameraController>().GetLockOnTarget().transform.position - transform.position;
-                Vector3 newDir = Vector3.RotateTowards(transform.forward, targetDir, turnTowardCameraSpeed * Time.deltaTime, 0.0f);
-                newDir.y = 0;
-                transform.rotation = Quaternion.LookRotation(newDir);
-            }
-            
-        }
-    }
-
     void MoveForwardDirectionControl()
     {
-        /*Vector3 lookAtPos = playerRB.transform.position;
-        lookAtPos.z += IC.GetForwardMove() + Camera.main.transform.forward.z;
-        lookAtPos.x += IC.GetRightMove() + Camera.main.transform.forward.x;
-        lookAtPos.y = transform.position.y;
-        yeet.transform.position = lookAtPos;
-
-        Debug.Log(Camera.main.transform.forward + " " + lookAtPos);
-        transform.LookAt(lookAtPos);*/
-
         Camera mainCam = Camera.main;
 
         Vector3 inputDir = transform.position +((mainCam.transform.forward * IC.GetForwardMove()) + (mainCam.transform.right * IC.GetRightMove()));
         inputDir.y = transform.position.y;
 
         transform.LookAt(inputDir);
-        transform.position = Vector3.MoveTowards(transform.position, inputDir, 0.1f);
+        transform.position = Vector3.MoveTowards(transform.position, inputDir, ForwardMoveSpeed / 20);
         UpdateAnimations();
-
-        //transform.position = transform.position + (transform.forward * ForwardMoveSpeed * IC.GetForwardMove() * Time.deltaTime);
     }
 
     void UpdateAnimations()
     {
-        anim.SetFloat("forwardMove", IC.GetForwardMove());
-        anim.SetFloat("sidewaysMove", IC.GetRightMove());
+        float forwardMoveVar = IC.GetForwardMove();
+        float sideWaysMoveVar = IC.GetRightMove();
+
+
+        if (forwardMoveVar < 0) { forwardMoveVar *= -1; }
+        if (sideWaysMoveVar < 0) { sideWaysMoveVar *= -1; }
+
+        float totalMoveVar = (forwardMoveVar + sideWaysMoveVar) * 2;
+        
+
+        anim.SetFloat("forwardMove", totalMoveVar);
         anim.SetBool("dodge", false);
     }
 
+
     void Dodge()
     {
-        Vector3 movement = (transform.forward * IC.GetForwardMove()) + (transform.right * IC.GetRightMove());
+        //Get the players directional input
+        Vector3 movement = transform.position + (transform.forward * IC.GetForwardMove()) + (transform.right * IC.GetRightMove());
 
-        movement.Normalize();
         //Make the player move backwards if they arn't giving any movement commands.
-        if(movement == Vector3.zero){movement = -transform.forward;}
+        if (movement == Vector3.zero) { movement = -transform.forward; }
 
         //Check the nearby area for and walls and stop movement if there are some found.
+        bool nearWall = false;
+
         float currMoveSpeedLimiter = ForwardMoveSpeed * 2;
         RaycastHit hit;
         float sweepDist = movement.magnitude * Time.deltaTime + SweepDistanceBuffer;
         if (playerRB.SweepTest(movement, out hit, sweepDist))
         {
-            playerRB.velocity = new Vector3(0, playerRB.velocity.y, 0);
+            nearWall = true;
         }
-        //Checks if the players maginitude will exceed the players movespeed.
-        else if (XZMagnitude(playerRB.velocity.x, playerRB.velocity.z) < currMoveSpeedLimiter)
+
+        //Move the player
+        if(!nearWall)
         {
-            playerRB.AddForce(movement * ForwardMoveSpeed * 2 * movementAddition);
+            transform.position = Vector3.MoveTowards(transform.position, movement, ForwardMoveSpeed / 15);
         }
 
         timeToResetDodge = dodgeResetTime;
-
         anim.SetBool("dodge", true);
     }
 
