@@ -152,17 +152,32 @@ public class PlayerManager : MonoBehaviour {
 
     void MoveForwardDirectionControl()
     {
-        Vector3 lookAtPos = playerRB.transform.position;
+        /*Vector3 lookAtPos = playerRB.transform.position;
         lookAtPos.z += IC.GetForwardMove() + Camera.main.transform.forward.z;
         lookAtPos.x += IC.GetRightMove() + Camera.main.transform.forward.x;
         lookAtPos.y = transform.position.y;
         yeet.transform.position = lookAtPos;
 
         Debug.Log(Camera.main.transform.forward + " " + lookAtPos);
-        transform.LookAt(lookAtPos);
+        transform.LookAt(lookAtPos);*/
 
+        Camera mainCam = Camera.main;
+
+        Vector3 inputDir = transform.position +((mainCam.transform.forward * IC.GetForwardMove()) + (mainCam.transform.right * IC.GetRightMove()));
+        inputDir.y = transform.position.y;
+
+        transform.LookAt(inputDir);
+        transform.position = Vector3.MoveTowards(transform.position, inputDir, 0.1f);
+        UpdateAnimations();
 
         //transform.position = transform.position + (transform.forward * ForwardMoveSpeed * IC.GetForwardMove() * Time.deltaTime);
+    }
+
+    void UpdateAnimations()
+    {
+        anim.SetFloat("forwardMove", IC.GetForwardMove());
+        anim.SetFloat("sidewaysMove", IC.GetRightMove());
+        anim.SetBool("dodge", false);
     }
 
     void Dodge()
