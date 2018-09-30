@@ -28,8 +28,10 @@ public class PlayerManager : MonoBehaviour {
 
     GameObject deathUI;
 
-	// Use this for initialization
-	void Start ()
+    Vector3 movement = Vector3.zero;
+
+    // Use this for initialization
+    void Start ()
     {
         IC = new InputController();
         playerRB = GetComponent<Rigidbody>();
@@ -108,11 +110,13 @@ public class PlayerManager : MonoBehaviour {
 
     void Dodge()
     {
+        Camera mainCam = Camera.main;
+
         //Get the players directional input
-        Vector3 movement = transform.position + (transform.forward * IC.GetForwardMove()) + (transform.right * IC.GetRightMove());
+        
 
         //Make the player move backwards if they arn't giving any movement commands.
-        if (movement == Vector3.zero) { movement = -transform.forward; }
+        if (movement == Vector3.zero) { movement = -(mainCam.transform.forward) ; }
 
         //Check the nearby area for and walls and stop movement if there are some found.
         bool nearWall = false;
@@ -125,15 +129,17 @@ public class PlayerManager : MonoBehaviour {
             nearWall = true;
         }
 
+
         //Move the player
         if(!nearWall)
         {
-            transform.position = Vector3.MoveTowards(transform.position, movement, ForwardMoveSpeed / 15);
+            transform.position = Vector3.MoveTowards(transform.position, transform.position + movement, ForwardMoveSpeed / 10);
         }
 
         timeToResetDodge = dodgeResetTime;
         anim.SetBool("dodge", true);
     }
+
 
     void CheckAndResetDodge()
     {
@@ -141,6 +147,7 @@ public class PlayerManager : MonoBehaviour {
         if(timeToResetDodge <= 0)
         {
             timeDodging = 0;
+            movement = Vector3.zero;
         }
     }
 
@@ -148,8 +155,20 @@ public class PlayerManager : MonoBehaviour {
     {
         IC.UpdateMovementInput();
 
-        if (IC.GetDodging() && timeDodging < maxDodgeTime) { Dodge();  timeDodging += Time.deltaTime; }
-        else{ MoveForwardDirectionControl();  CheckAndResetDodge();}
+        if (IC.GetDodging() && timeDodging < maxDodgeTime)
+        {  
+            if(movement == Vector3.zero)
+            {
+                Debug.Log("Hello there!");
+                Camera mainCam = Camera.main;
+                movement =(mainCam.transform.forward * IC.GetForwardMove()) + (mainCam.transform.right * IC.GetRightMove());
+                movement.y = 0;
+            }
+           
+            Dodge();
+            timeDodging += Time.deltaTime;
+        }
+        else{ MoveForwardDirectionControl();  CheckAndResetDodge(); movement = Vector3.zero; }
 
         if (IC.GetPaused()) { GetComponent<PauseMenu>().PauseGame(); }
     }

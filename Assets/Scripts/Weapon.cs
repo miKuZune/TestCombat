@@ -21,6 +21,7 @@ public class Weapon : MonoBehaviour {
     {
         if(other.gameObject.tag == hitTag)
         {
+            Debug.Log("hit");
             other.GetComponent<Health>().TakeDamage(damage);
 
             AttackManager attackManager = GetComponentInParent<AttackManager>();

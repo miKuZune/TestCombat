@@ -20,6 +20,10 @@ public class PlayerCombatController : MonoBehaviour {
 
         anim = GetComponent<Animator>();
         IC = new InputController();
+
+        Weapon wep = GetComponentInChildren<Weapon>();
+        wep.SetDamage(10);
+        wep.SetHitTag("Enemy");
 	}
 
     //Potential classes to be used for animations
@@ -28,6 +32,7 @@ public class PlayerCombatController : MonoBehaviour {
     void AnimationPlayOnTrigger()
     {
         anim.SetTrigger("Attack");
+        timeSinceAttackCalled = 0;
     }
 
     //Crossfade based animations
@@ -46,7 +51,7 @@ public class PlayerCombatController : MonoBehaviour {
 
         if (IC.GetLight())
         {
-            CrossfadeAttackAnimations();
+            AnimationPlayOnTrigger();
         }
 
         timeSinceAttackCalled += Time.deltaTime;
