@@ -29,9 +29,20 @@ public class PlayerCombatController : MonoBehaviour {
     //Potential classes to be used for animations
 
     //Trigger based animations
-    void AnimationPlayOnTrigger()
+    void AnimationPlayOnTrigger(int animType)
     {
-        anim.SetTrigger("Attack");
+        switch (animType)
+        {
+            case 0:
+                anim.SetTrigger("Attack");
+                Debug.Log("light");
+                break;
+
+            case 1:
+                anim.SetTrigger("heavyAttack");
+                Debug.Log("heavy");
+                break;
+        }
         timeSinceAttackCalled = 0;
     }
 
@@ -51,7 +62,12 @@ public class PlayerCombatController : MonoBehaviour {
 
         if (IC.GetLight())
         {
-            AnimationPlayOnTrigger();
+            AnimationPlayOnTrigger(0);
+        }
+
+        else if(IC.GetHeavy())
+        {
+            AnimationPlayOnTrigger(1);
         }
 
         timeSinceAttackCalled += Time.deltaTime;
