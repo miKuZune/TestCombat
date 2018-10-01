@@ -135,7 +135,7 @@ public class CameraController : MonoBehaviour {
         {
             if(target == null)
             {
-                target = FindClosestObj(gameObject, "Enemy");
+                target = FindClosestObj(gameObject, "Agent");
             }
             else
             {

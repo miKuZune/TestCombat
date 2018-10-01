@@ -8,6 +8,8 @@ public class PlayerManager : MonoBehaviour {
     public float ForwardMoveSpeed;
     public float BackwardMoveSpeed;
     public float JumpPower;
+    float currentMoveSpeed;
+
 
     public float DistanceToBeGrouned;
     public float SweepDistanceBuffer;
@@ -42,11 +44,24 @@ public class PlayerManager : MonoBehaviour {
 
         deathUI = GameObject.Find("DeathUI");
         deathUI.SetActive(false);
+
+        currentMoveSpeed = ForwardMoveSpeed;
 	}
 
     public GameObject GetDeathUIGameObject()
     {
         return deathUI;
+    }
+
+    public void ChangeMoveSpeed(float newMove)
+    {
+        currentMoveSpeed = newMove;
+    }
+
+    public void ResetMoveSpeed()
+    {
+        currentMoveSpeed = ForwardMoveSpeed;
+        Debug.Log("reset");
     }
 	
     //Move the player in an upward direction.
@@ -87,7 +102,7 @@ public class PlayerManager : MonoBehaviour {
         inputDir.y = transform.position.y;
 
         transform.LookAt(inputDir);
-        transform.position = Vector3.MoveTowards(transform.position, inputDir, ForwardMoveSpeed / 20);
+        transform.position = Vector3.MoveTowards(transform.position, inputDir, currentMoveSpeed / 20);
         UpdateAnimations();
     }
 
@@ -121,7 +136,6 @@ public class PlayerManager : MonoBehaviour {
         //Check the nearby area for and walls and stop movement if there are some found.
         bool nearWall = false;
 
-        float currMoveSpeedLimiter = ForwardMoveSpeed * 2;
         RaycastHit hit;
         float sweepDist = movement.magnitude * Time.deltaTime + SweepDistanceBuffer;
         if (playerRB.SweepTest(movement, out hit, sweepDist))

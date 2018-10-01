@@ -12,6 +12,8 @@ public class PlayerCombatController : MonoBehaviour {
 
     float timeSinceAttackCalled;
 
+    Weapon wep;
+
 	// Use this for initialization
 	void Start ()
     {
@@ -21,9 +23,9 @@ public class PlayerCombatController : MonoBehaviour {
         anim = GetComponent<Animator>();
         IC = new InputController();
 
-        Weapon wep = GetComponentInChildren<Weapon>();
-        wep.SetDamage(10);
-        wep.SetHitTag("Enemy");
+        wep = GetComponentInChildren<Weapon>();
+        wep.SetDamage(20);
+        wep.SetHitTag("Agent");
 	}
 
     //Potential classes to be used for animations
@@ -35,12 +37,12 @@ public class PlayerCombatController : MonoBehaviour {
         {
             case 0:
                 anim.SetTrigger("Attack");
-                Debug.Log("light");
+                wep.SetDamage(10);
                 break;
 
             case 1:
                 anim.SetTrigger("heavyAttack");
-                Debug.Log("heavy");
+                wep.SetDamage(40);
                 break;
         }
         timeSinceAttackCalled = 0;
